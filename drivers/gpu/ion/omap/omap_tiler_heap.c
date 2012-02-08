@@ -458,8 +458,19 @@ int omap_tiler_vinfo(struct ion_client *client, struct ion_handle *handle,
 	return 0;
 }
 
-static int omap_tiler_heap_map_user(struct ion_heap *heap,
-		struct ion_buffer *buffer, struct vm_area_struct *vma)
+int omap_tiler_vinfo(struct ion_client *client, struct ion_handle *handle,
+			unsigned int *vstride, unsigned int *vsize)
+{
+	struct omap_tiler_info *info = ion_handle_buffer(handle)->priv_virt;
+
+	*vstride = tiler_block_vstride(info->tiler_handle);
+	*vsize = tiler_block_vsize(info->tiler_handle);
+
+	return 0;
+}
+
+int omap_tiler_heap_map_user(struct ion_heap *heap, struct ion_buffer *buffer,
+			     struct vm_area_struct *vma)
 {
 	struct omap_tiler_info *info = buffer->priv_virt;
 	unsigned long addr = vma->vm_start;
