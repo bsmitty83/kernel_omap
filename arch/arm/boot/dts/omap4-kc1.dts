@@ -19,6 +19,35 @@
 		reg = <0x80000000 0x20000000>; /* 512 GB */
 	};
 
+	aliases {
+		display0 = &lcd0;
+	};
+
+	lcd0: display {
+		compatible = "lg,ld070ws2", "panel-dpi";
+		label = "lcd";
+		panel-timing {
+			clock-frequency = <51200000>;
+
+			hactive = <1024>;
+			vactive = <600>;
+
+			hback-porch = <150>;
+			hfront-porch = <160>;
+			hsync-len = <10>;
+
+			vback-porch = <20>;
+			vfront-porch = <12>;
+			vsync-len = <3>;
+		};
+
+		port {
+			lcd_in: endpoint {
+				remote-endpoint = <&dpi_out>;
+			};
+		};
+	};
+
 	pwmleds {
 		compatible = "pwm-leds";
 		charging_green {
@@ -432,6 +461,15 @@
 
 &dss {
 	status = "ok";
+	pinctrl-names = "default";
+	pinctrl-0 = <&dss_dpi_pins>;
+
+	port {
+		dpi_out: endpoint {
+			remote-endpoint = <&lcd_in>;
+			data-lines = <24>;
+		};
+	};
 };
 
 &dsi2 {
